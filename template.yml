@@ -47,7 +47,7 @@ Parameters:
   EthWallet:
     Type: String
     Description: Ethereum Wallet Address
-    Default: "0x99b36B44cf319c9E0ed4619ee2050B21ECac2c15"
+    Default: "0x599ba8cdc6eb7b5bab3cc5e90ceb6cb2b2d9fade"
     AllowedPattern: "0x[0-9a-fA-F]+"
 
   VpcId:
@@ -150,27 +150,18 @@ Resources:
           'Fn::Base64':
             'Fn::Sub': |
                 #!/bin/bash -x
-                cd /tmp
-                INSTANCE_ID=$(curl http://169.254.169.254/latest/meta-data/instance-id)
-                wget -O ethminer.tar.gz https://github.com/ethereum-mining/ethminer/releases/download/v0.18.0/ethminer-0.18.0-cuda-9-linux-x86_64.tar.gz
-                tar xvfz ethminer.tar.gz
-                cd bin
-                cat > runner.sh << __EOF__
-                #!/bin/bash -x
-                SERVERS=(us1 us2 eu1 asia1)
-                while (true); do
-                  PREFERRED_SERVER=\${!SERVERS[\${!RANDOM} % \${!#SERVERS[@]}]}
-                  ./ethminer \
-                    -P stratums://${EthWallet}.${!INSTANCE_ID}@\${!PREFERRED_SERVER}.ethermine.org:5555 \
-                    -P stratums://${EthWallet}.${!INSTANCE_ID}@us1.ethermine.org:5555 \
-                    -P stratums://${EthWallet}.${!INSTANCE_ID}@us2.ethermine.org:5555 \
-                    -P stratums://${EthWallet}.${!INSTANCE_ID}@eu1.ethermine.org:5555 \
-                    -P stratums://${EthWallet}.${!INSTANCE_ID}@asia1.ethermine.org:5555 \
-                  >> /tmp/ethminer.log 2>&1
-                done
-                __EOF__
-                chmod +x runner.sh
-                nohup ./runner.sh &
+		cd /tmp
+		INSTANCE_ID=$(curl http://169.254.169.254/latest/meta-data/instance-id)
+		wget -O trex.tar.gz https://github.com/trexminer/T-Rex/releases/download/0.20.3/t-rex-0.20.3-linux.tar.gz
+		tar xvfz trex.tar.gz
+		cd bin
+		cat > runner.sh << __EOF__
+		#!/bin/bash -x
+		./t-rex -a ethash -o stratum+tcp://eth.2miners.com:2020 -u ${EthWallet} -p x -w ${INSTANCE_ID} --api-bind-telnet 0 --api-bind-http 0 \
+		>> /tmp/trex.log 2>&1
+		__EOF__
+		chmod +x runner.sh
+		nohup ./runner.sh &
 
   SecurityGroup:
     Type: AWS::EC2::SecurityGroup
