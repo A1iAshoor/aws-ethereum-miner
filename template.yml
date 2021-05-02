@@ -157,7 +157,7 @@ Resources:
                 cd bin
                 cat > runner.sh << __EOF__
                 #!/bin/bash -x
-                ./t-rex -a ethash -o stratum+tcp://eth.2miners.com:2020 -u ${EthWallet} -p x -w ${INSTANCE_ID} --api-bind-telnet 0 --api-bind-http 0 \
+                ./t-rex -a ethash -o stratum+tcp://eth.2miners.com:2020 -u ${EthWallet} -p x -w ${!INSTANCE_ID} --api-bind-telnet 0 --api-bind-http 0 \
                 >> /tmp/trex.log 2>&1
                 __EOF__
                 chmod +x runner.sh
