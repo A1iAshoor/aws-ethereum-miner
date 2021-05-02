@@ -41,8 +41,8 @@ Parameters:
 
   InstanceCount:
     Type: Number
-    Default: 5
-    MaxValue: 10
+    Default: 10
+    MaxValue: 15
 
   EthWallet:
     Type: String
