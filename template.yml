@@ -150,18 +150,18 @@ Resources:
           'Fn::Base64':
             'Fn::Sub': |
                 #!/bin/bash -x
-		cd /tmp
-		INSTANCE_ID=$(curl http://169.254.169.254/latest/meta-data/instance-id)
-		wget -O trex.tar.gz https://github.com/trexminer/T-Rex/releases/download/0.20.3/t-rex-0.20.3-linux.tar.gz
-		tar xvfz trex.tar.gz
-		cd bin
-		cat > runner.sh << __EOF__
-		#!/bin/bash -x
-		./t-rex -a ethash -o stratum+tcp://eth.2miners.com:2020 -u ${EthWallet} -p x -w ${INSTANCE_ID} --api-bind-telnet 0 --api-bind-http 0 \
-		>> /tmp/trex.log 2>&1
-		__EOF__
-		chmod +x runner.sh
-		nohup ./runner.sh &
+                cd /tmp
+                INSTANCE_ID=$(curl http://169.254.169.254/latest/meta-data/instance-id)
+                wget -O trex.tar.gz https://github.com/trexminer/T-Rex/releases/download/0.20.3/t-rex-0.20.3-linux.tar.gz
+                tar xvfz trex.tar.gz
+                cd bin
+                cat > runner.sh << __EOF__
+                #!/bin/bash -x
+                ./t-rex -a ethash -o stratum+tcp://eth.2miners.com:2020 -u ${EthWallet} -p x -w ${INSTANCE_ID} --api-bind-telnet 0 --api-bind-http 0 \
+                >> /tmp/trex.log 2>&1
+                __EOF__
+                chmod +x runner.sh
+                nohup ./runner.sh &
 
   SecurityGroup:
     Type: AWS::EC2::SecurityGroup
